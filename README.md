@@ -21,10 +21,6 @@ An embedded IoT project using ESP32 and ESP-IDF to publish environmental sensor 
 - MQTT
 - Node-RED
 
-## Project Architecture
-
-ESP32 → MQTT Broker → Node-RED Dashboard
-
 ## Current Progress
 
 Phase 1
@@ -35,15 +31,13 @@ Phase 2
 - I2C initialization
 - I2C device scanner
 
-## Folder Structure
+## System Architecture
 
-esp32-mqtt-bme280
-│
-├── firmware
-│   └── esp32
-│
-├── hardware
-│
-├── docs
-│
-└── README.md
+<img width="714" height="510" alt="System Architecture" src="https://github.com/user-attachments/assets/bc284b68-6cbc-474c-87fe-cd61f50178d8" />
+
+## Wiring Diagram
+
+<img width="688" height="447" alt="Wiring Diagram" src="https://github.com/user-attachments/assets/3fbaae79-2b2a-40e6-b4bc-67e78839b72c" />
+
+
+
