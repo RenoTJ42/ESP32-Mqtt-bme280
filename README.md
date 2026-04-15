@@ -21,16 +21,6 @@ An embedded IoT project using ESP32 and ESP-IDF to publish environmental sensor 
 - MQTT
 - Node-RED
 
-## Current Progress
-
-Phase 1
-- ESP-IDF environment setup
-- LED blink firmware
-
-Phase 2
-- I2C initialization
-- I2C device scanner
-
 ## System Architecture
 
 <img width="714" height="510" alt="System Architecture" src="https://github.com/user-attachments/assets/bc284b68-6cbc-474c-87fe-cd61f50178d8" />
