@@ -65,6 +65,8 @@ void app_main()
 {
     i2c_master_init();
 
+    int32_t temp_raw = 0;
+
     /*while (1)
     {
         i2c_scanner();
@@ -72,7 +74,7 @@ void app_main()
     }*/
 
     
-   uint8_t chip_id = 0;
+   /*uint8_t chip_id = 0;
 
 
     if (bme280_get_chip_id(&chip_id) == ESP_OK)
@@ -91,11 +93,19 @@ void app_main()
 
     else
     {
-        printf("Invalid device detected.\n");
-    }
+        printf("Invalid device detected.\n");   
+    }*/
 
     while (1)
     {
-        vTaskDelay(5000 / portTICK_PERIOD_MS);
-    }
+        if (bme280_read_temperature_raw(&temp_raw) == ESP_OK)
+        {
+            printf("Raw Temperature: %ld\n", temp_raw);
+        }
+        else
+        {
+            printf("Read failed\n");
+        }
+
+        vTaskDelay(2000 / portTICK_PERIOD_MS);    }
 }

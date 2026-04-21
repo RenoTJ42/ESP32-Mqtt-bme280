@@ -37,3 +37,23 @@ esp_err_t bme280_get_chip_id(uint8_t *chip_id)
     return ret;
 }
 
+esp_err_t bme280_read_temperature_raw(int32_t *temp_raw)
+{
+    uint8_t data[3];
+
+    esp_err_t ret = i2c_master_write_read_device(
+        I2C_MASTER_NUM,
+        BME280_ADDR,
+        (uint8_t[]){0xFA},
+        1,
+        data,
+        3,
+        1000 / portTICK_PERIOD_MS);
+
+    if (ret != ESP_OK)
+        return ret;
+
+    *temp_raw = (int32_t)((data[0] << 12) | (data[1] << 4) | (data[2] >> 4));
+
+    return ESP_OK;
+}
