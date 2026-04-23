@@ -57,3 +57,40 @@ esp_err_t bme280_read_temperature_raw(int32_t *temp_raw)
 
     return ESP_OK;
 }
+
+esp_err_t bme280_read_calibration(bme280_calib_data_t *calib)
+{
+    uint8_t data[6];
+
+    esp_err_t ret = i2c_master_write_read_device(
+        I2C_MASTER_NUM,
+        BME280_ADDR,
+        (uint8_t[]){0x88},
+        1,
+        data,
+        6,
+        1000 / portTICK_PERIOD_MS);
+
+    if (ret != ESP_OK)
+        return ret;
+
+    calib->dig_T1 = (data[1] << 8) | data[0];
+    calib->dig_T2 = (data[3] << 8) | data[2];
+    calib->dig_T3 = (data[5] << 8) | data[4];
+
+    return ESP_OK;
+}
+
+float bme280_compensate_temperature(int32_t adc_T, bme280_calib_data_t *calib)
+{
+    float var1, var2, T;
+
+    var1 = (((float)adc_T) / 16384.0 - ((float)calib->dig_T1) / 1024.0) * ((float)calib->dig_T2);
+    var2 = ((((float)adc_T) / 131072.0 - ((float)calib->dig_T1) / 8192.0) *
+            (((float)adc_T) / 131072.0 - ((float)calib->dig_T1) / 8192.0)) *
+           ((float)calib->dig_T3);
+
+    T = (var1 + var2) / 5120.0;
+
+    return T;
+}

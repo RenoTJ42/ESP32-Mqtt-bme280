@@ -96,16 +96,22 @@ void app_main()
         printf("Invalid device detected.\n");   
     }*/
 
+    bme280_calib_data_t calib;
+
+    if (bme280_read_calibration(&calib) != ESP_OK)
+    {
+        printf("Calibration read failed\n");
+        return;
+    }
+
     while (1)
     {
         if (bme280_read_temperature_raw(&temp_raw) == ESP_OK)
         {
-            printf("Raw Temperature: %ld\n", temp_raw);
-        }
-        else
-        {
-            printf("Read failed\n");
+            float temp = bme280_compensate_temperature(temp_raw, &calib);
+            printf("Temperature: %.2f °C\n", temp);
         }
 
-        vTaskDelay(2000 / portTICK_PERIOD_MS);    }
+        vTaskDelay(2000 / portTICK_PERIOD_MS);
+    }
 }
