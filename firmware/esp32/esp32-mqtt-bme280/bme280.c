@@ -108,15 +108,4 @@ esp_err_t bme280_read_pressure_raw(int32_t *press_raw)
     return ESP_OK;
 }
 
-esp_err_t bme280_read_humidity_raw(int32_t *hum_raw)
-{
-    uint8_t data[2];
 
-    esp_err_t ret = bme280_read_bytes(0xFD, data, 2);
-    if (ret != ESP_OK)
-        return ret;
-
-    *hum_raw = (int32_t)((data[0] << 8) | data[1]);
-
-    return ESP_OK;
-}

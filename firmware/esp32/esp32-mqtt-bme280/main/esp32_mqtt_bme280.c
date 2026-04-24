@@ -5,6 +5,13 @@
 
 #include "bme280.h"
 
+#include "esp_wifi.h"
+#include "esp_event.h"
+#include "esp_log.h"
+#include "nvs_flash.h"
+
+#include "wifi.h"
+
 #define I2C_MASTER_SCL_IO 22
 #define I2C_MASTER_SDA_IO 21
 #define I2C_MASTER_NUM I2C_NUM_0
@@ -87,6 +94,8 @@ void sensor_task(void *pvParameter)
 void app_main()
 {
     i2c_master_init();
+
+    wifi_init();
 
     xTaskCreate(sensor_task, "sensor_task", 4096, NULL, 5, NULL);
 }
