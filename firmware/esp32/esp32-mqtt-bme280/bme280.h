@@ -15,6 +15,9 @@ esp_err_t bme280_read_temperature_raw(int32_t *temp_raw);
 esp_err_t bme280_read_calibration(bme280_calib_data_t *calib);
 float bme280_compensate_temperature(int32_t adc_T, bme280_calib_data_t *calib);
 
+esp_err_t bme280_read_pressure_raw(int32_t *press_raw);
+esp_err_t bme280_read_humidity_raw(int32_t *hum_raw);
+
 typedef struct {
     uint16_t dig_T1;
     int16_t  dig_T2;

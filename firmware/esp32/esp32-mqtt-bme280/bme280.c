@@ -94,3 +94,29 @@ float bme280_compensate_temperature(int32_t adc_T, bme280_calib_data_t *calib)
 
     return T;
 }
+
+esp_err_t bme280_read_pressure_raw(int32_t *press_raw)
+{
+    uint8_t data[3];
+
+    esp_err_t ret = bme280_read_bytes(0xF7, data, 3);
+    if (ret != ESP_OK)
+        return ret;
+
+    *press_raw = (int32_t)((data[0] << 12) | (data[1] << 4) | (data[2] >> 4));
+
+    return ESP_OK;
+}
+
+esp_err_t bme280_read_humidity_raw(int32_t *hum_raw)
+{
+    uint8_t data[2];
+
+    esp_err_t ret = bme280_read_bytes(0xFD, data, 2);
+    if (ret != ESP_OK)
+        return ret;
+
+    *hum_raw = (int32_t)((data[0] << 8) | data[1]);
+
+    return ESP_OK;
+}

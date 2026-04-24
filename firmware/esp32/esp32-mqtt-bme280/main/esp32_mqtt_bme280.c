@@ -61,47 +61,15 @@ void i2c_scanner()
         1000 / portTICK_PERIOD_MS);
 }*/
 
-void app_main()
+void sensor_task(void *pvParameter)
 {
-    i2c_master_init();
-
-    int32_t temp_raw = 0;
-
-    /*while (1)
-    {
-        i2c_scanner();
-        vTaskDelay(5000 / portTICK_PERIOD_MS);
-    }*/
-
-    
-   /*uint8_t chip_id = 0;
-
-
-    if (bme280_get_chip_id(&chip_id) == ESP_OK)
-    {
-        printf("BME280 Chip ID: 0x%X\n", chip_id);
-    }
-    else
-    {
-        printf("Failed to read chip ID after retries\n");
-    }
-
-    if (*chip_id == 0x60)
-    {
-        printf("Success.\n");
-    }
-
-    else
-    {
-        printf("Invalid device detected.\n");   
-    }*/
-
     bme280_calib_data_t calib;
+    int32_t temp_raw;
 
     if (bme280_read_calibration(&calib) != ESP_OK)
     {
-        printf("Calibration read failed\n");
-        return;
+        printf("Calibration failed\n");
+        vTaskDelete(NULL);
     }
 
     while (1)
@@ -114,4 +82,11 @@ void app_main()
 
         vTaskDelay(2000 / portTICK_PERIOD_MS);
     }
+}
+
+void app_main()
+{
+    i2c_master_init();
+
+    xTaskCreate(sensor_task, "sensor_task", 4096, NULL, 5, NULL);
 }
