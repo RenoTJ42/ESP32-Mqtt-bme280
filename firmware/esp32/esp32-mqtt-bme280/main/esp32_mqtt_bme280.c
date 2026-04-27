@@ -11,6 +11,7 @@
 #include "nvs_flash.h"
 
 #include "wifi.h"
+#include "mqtt.h"
 
 #define I2C_MASTER_SCL_IO 22
 #define I2C_MASTER_SDA_IO 21
@@ -85,6 +86,7 @@ void sensor_task(void *pvParameter)
         {
             float temp = bme280_compensate_temperature(temp_raw, &calib);
             printf("Temperature: %.2f °C\n", temp);
+            mqtt_publish_temperature(temp);
         }
 
         vTaskDelay(2000 / portTICK_PERIOD_MS);
@@ -96,6 +98,8 @@ void app_main()
     i2c_master_init();
 
     wifi_init();
+
+    mqtt_app_start();
 
     xTaskCreate(sensor_task, "sensor_task", 4096, NULL, 5, NULL);
 }
