@@ -10,6 +10,21 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
     if (event_id == MQTT_EVENT_CONNECTED)
     {
         printf("MQTT Connected\n");
+        esp_mqtt_client_subscribe(client, "esp32/output/control", 0);
+
+    }
+
+    else if (event_id == MQTT_EVENT_DATA)
+    {
+    printf("Received: %.*s\n", event->data_len, event->data);
+    if (strncmp(event->data, "1", event->data_len) == 0)
+        {
+        gpio_set_level(2, 1);  // LED ON
+        }
+    else if (strncmp(event->data, "0", event->data_len) == 0)
+        {
+        gpio_set_level(2, 0);  // LED OFF
+        }
     }
 }
 
@@ -39,3 +54,4 @@ void mqtt_publish_temperature(float temperature)
                             1,
                             0);
 }
+
